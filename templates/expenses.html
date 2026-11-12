@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses{% endblock %}
+{% block page_icon %}📋{% endblock %}
+
+{% block content %}
+<h3 class="st-subheader">Expenses</h3>
+
+<div style="margin-bottom: 1rem;">
+    <a href="/expenses" class="st-button">Refresh</a>
+</div>
+
+{% if expenses_empty %}
+<div class="st-alert st-alert-info">
+    No expenses found yet
+</div>
+{% else %}
+<div class="st-dataframe-wrapper">
+    <table class="st-dataframe">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                {% for col in columns %}
+                <td>{{ row[col] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a href="/expenses/download" class="st-button" download="my_expenses.csv">Download your expenses</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,624 @@
+/* Streamlit-inspired HTML/CSS Frontend Stylesheet (Dark Blue & Light Mode) */
+:root,
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-color: #0d1b2a;
+    --secondary-bg: #1b263b;
+    --table-header-bg: #162032;
+    --table-row-hover: rgba(27, 38, 59, 0.75);
+    --text-color: #f8fafc;
+    --text-muted: rgba(248, 250, 252, 0.65);
+    --border-color: rgba(248, 250, 252, 0.22);
+    --border-light: rgba(248, 250, 252, 0.12);
+    --primary-color: #ff4b4b;
+    --primary-hover: #ff3333;
+    --chart-blue: #60a5fa;
+    --info-bg: rgba(28, 131, 225, 0.22);
+    --info-text: #bfdbfe;
+    --success-bg: rgba(33, 195, 84, 0.22);
+    --success-text: #bbf7d0;
+    --warning-bg: rgba(255, 227, 18, 0.2);
+    --warning-text: #fef08a;
+    --error-bg: rgba(255, 43, 43, 0.24);
+    --error-text: #fecaca;
+    --sidebar-width: 260px;
+    --font-sans: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+    --bg-color: #ffffff;
+    --secondary-bg: #f0f2f6;
+    --table-header-bg: #f8f9fb;
+    --table-row-hover: rgba(240, 242, 246, 0.55);
+    --text-color: #31333f;
+    --text-muted: rgba(49, 51, 63, 0.6);
+    --border-color: rgba(49, 51, 63, 0.2);
+    --border-light: rgba(49, 51, 63, 0.1);
+    --primary-color: #ff4b4b;
+    --primary-hover: #ff3333;
+    --chart-blue: #0068c9;
+    --info-bg: #e7f2fa;
+    --info-text: #004280;
+    --success-bg: #dff2e1;
+    --success-text: #155724;
+    --warning-bg: #fff8c5;
+    --warning-text: #856404;
+    --error-bg: #fde8e8;
+    --error-text: #721c24;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Top decorative bar (Streamlit signature rainbow bar) */
+.st-top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.18rem;
+    background: linear-gradient(90deg, rgb(255, 75, 75), rgb(255, 253, 128));
+    z-index: 1000;
+}
+
+/* Header Actions (Theme Toggle Button) */
+.st-header-actions {
+    position: fixed;
+    top: 0.75rem;
+    right: 1.25rem;
+    z-index: 950;
+}
+
+.st-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-color);
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.2s ease;
+}
+
+.st-theme-toggle:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Sidebar */
+.st-sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    background-color: var(--secondary-bg);
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.25s ease, width 0.25s ease, background-color 0.2s ease;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 900;
+}
+
+.st-sidebar.collapsed {
+    margin-left: calc(-1 * var(--sidebar-width));
+}
+
+.st-sidebar-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.85rem 1rem 0.25rem;
+}
+
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    line-height: 1;
+    transition: background-color 0.15s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--border-light);
+}
+
+.sidebar-open-btn {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 950;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    display: none;
+}
+
+body.sidebar-is-collapsed .sidebar-open-btn {
+    display: inline-flex;
+}
+
+/* Sidebar Navigation */
+.st-sidebar-nav {
+    list-style: none;
+    padding: 0.5rem 1rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.st-sidebar-nav li {
+    margin-bottom: 0.25rem;
+}
+
+.st-sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    font-weight: 400;
+    transition: background-color 0.15s ease;
+}
+
+.st-sidebar-nav a:hover {
+    background-color: rgba(151, 166, 195, 0.18);
+}
+
+.st-sidebar-nav a.active {
+    background-color: rgba(151, 166, 195, 0.28);
+    font-weight: 600;
+}
+
+.st-sidebar-content {
+    padding: 1.25rem 1rem;
+    flex: 1;
+}
+
+/* Main Content Area */
+.st-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.st-block-container {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+}
+
+/* Typography */
+h1, .st-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    padding: 0.5rem 0 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+h2, .st-header {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    padding: 0.5rem 0 0.75rem;
+    line-height: 1.25;
+}
+
+h3, .st-subheader {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-color);
+    padding: 0.25rem 0 0.75rem;
+    line-height: 1.3;
+}
+
+p, .st-write {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+/* Page Link (st.page_link) */
+.st-page-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    transition: background-color 0.15s ease;
+    margin-top: -0.25rem;
+}
+
+.st-page-link:hover {
+    background-color: var(--secondary-bg);
+}
+
+/* Divider (st.divider) */
+.st-divider {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 1.75rem 0;
+}
+
+/* Form Box (st.form) */
+.st-form {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    background-color: var(--bg-color);
+    margin-bottom: 1.25rem;
+}
+
+.st-field {
+    margin-bottom: 1rem;
+}
+
+.st-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--text-color);
+    margin-bottom: 0.35rem;
+}
+
+.st-input,
+.st-select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-color);
+    background-color: var(--secondary-bg);
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.st-sidebar .st-input,
+.st-sidebar .st-select {
+    background-color: var(--bg-color);
+}
+
+.st-input:focus,
+.st-select:focus {
+    border-color: var(--primary-color);
+    background-color: var(--bg-color);
+}
+
+/* Number Input with Stepper Buttons */
+.st-number-wrapper {
+    display: flex;
+    align-items: stretch;
+    background-color: var(--secondary-bg);
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+}
+
+.st-number-wrapper:focus-within {
+    border-color: var(--primary-color);
+    background-color: var(--bg-color);
+}
+
+.st-number-wrapper .st-input {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    flex: 1;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.st-number-wrapper .st-input::-webkit-outer-spin-button,
+.st-number-wrapper .st-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.st-step-btn {
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--border-light);
+    padding: 0 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.st-step-btn:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* Date Range Group */
+.st-date-range-group {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5rem;
+    align-items: center;
+    background-color: var(--secondary-bg);
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid transparent;
+}
+
+.st-date-range-group:focus-within {
+    border-color: var(--primary-color);
+    background-color: var(--bg-color);
+}
+
+.st-date-range-group .st-input {
+    background: transparent;
+    border: none;
+    padding: 0.4rem 0.35rem;
+}
+
+.st-date-range-sep {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    user-select: none;
+}
+
+/* Checkbox */
+.st-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0.75rem 0;
+    user-select: none;
+}
+
+.st-checkbox-label input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+/* Buttons (st.button, st.form_submit_button, st.download_button) */
+.st-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 400;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.st-button:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.st-button:active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.st-button.full-width {
+    width: 100%;
+}
+
+/* Alerts (st.info, st.success, st.warning, st.error) */
+.st-alert {
+    padding: 0.9rem 1rem;
+    border-radius: 0.5rem;
+    margin: 0.75rem 0 1rem;
+    font-size: 0.95rem;
+}
+
+.st-alert-info {
+    background-color: var(--info-bg);
+    color: var(--info-text);
+}
+
+.st-alert-success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+}
+
+.st-alert-warning {
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
+}
+
+.st-alert-error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+}
+
+/* Columns & Metrics (st.columns, st.metric) */
+.st-columns-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin: 1rem 0;
+}
+
+.st-columns-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.st-metric {
+    padding: 0.25rem 0;
+}
+
+.st-metric-label {
+    font-size: 0.875rem;
+    color: var(--text-color);
+    margin-bottom: 0.15rem;
+}
+
+.st-metric-value {
+    font-size: 2.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+/* Expander (st.expander) */
+.st-expander {
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.st-expander summary {
+    list-style: none;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.st-expander summary::-webkit-details-marker {
+    display: none;
+}
+
+.st-expander summary::after {
+    content: "▾";
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+}
+
+.st-expander[open] summary {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.st-expander[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.st-expander summary:hover {
+    color: var(--primary-color);
+}
+
+.st-expander-body {
+    padding: 0.85rem 1rem 1rem;
+}
+
+/* Dataframe Table (st.dataframe) */
+.st-dataframe-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    margin: 1rem 0 1.25rem;
+}
+
+.st-dataframe {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.st-dataframe thead th {
+    background-color: var(--table-header-bg);
+    color: var(--text-muted);
+    font-weight: 600;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-light);
+}
+
+.st-dataframe thead th:last-child {
+    border-right: none;
+}
+
+.st-dataframe tbody td {
+    padding: 0.55rem 0.85rem;
+    border-bottom: 1px solid var(--border-light);
+    border-right: 1px solid var(--border-light);
+    color: var(--text-color);
+}
+
+.st-dataframe tbody td:last-child {
+    border-right: none;
+}
+
+.st-dataframe tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.st-dataframe tbody tr:hover {
+    background-color: var(--table-row-hover);
+}
+
+/* Chart Containers */
+.st-chart-box {
+    width: 100%;
+    min-height: 320px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .st-columns-3,
+    .st-columns-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .st-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+    }
+}

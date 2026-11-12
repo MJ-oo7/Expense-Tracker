@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Expense Tracker{% endblock %}
+{% block page_icon %}📊{% endblock %}
+
+{% block head_extra %}
+{% if not expenses_empty %}
+<script src="/static/plotly.min.js"></script>
+{% endif %}
+{% endblock %}
+
+{% block sidebar_extra %}
+{% if not expenses_empty %}
+<details class="st-expander" {% if delete_msg or delete_error %}open{% endif %}>
+    <summary>Delete an Expense</summary>
+    <div class="st-expander-body">
+        <div class="st-alert st-alert-warning">
+            This will permanently delete your transaction
+        </div>
+
+        <form method="POST" action="/expense-tracker/delete">
+            <input type="hidden" name="start_date" value="{{ start_date }}">
+            <input type="hidden" name="end_date" value="{{ end_date }}">
+            <input type="hidden" name="filter_category" value="{{ sel_category }}">
+
+            <div class="st-field">
+                <label class="st-label" for="sel-exp-id">Choose what to delete</label>
+                <select id="sel-exp-id" name="exp_id" class="st-select">
+                    {% for item in delete_options %}
+                    <option value="{{ item.id }}">{{ item.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <label class="st-checkbox-label">
+                <input type="checkbox" name="confirmation" value="true">
+                <span>I understand that deleting a transaction is permanent.</span>
+            </label>
+
+            <button type="submit" class="st-button">Delete selected transaction</button>
+        </form>
+
+        {% if delete_msg %}
+        <div class="st-alert st-alert-success">{{ delete_msg }}</div>
+        {% endif %}
+        {% if delete_error %}
+        <div class="st-alert st-alert-error">{{ delete_error }}</div>
+        {% endif %}
+    </div>
+</details>
+{% elif delete_msg %}
+<div class="st-alert st-alert-success">{{ delete_msg }}</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="/expense-tracker/add" class="st-form">
+    <input type="hidden" name="filter_start_date" value="{{ start_date }}">
+    <input type="hidden" name="filter_end_date" value="{{ end_date }}">
+    <input type="hidden" name="filter_category" value="{{ sel_category }}">
+
+    <h1 class="st-title">Add Expenses</h1>
+
+    <div class="st-field">
+        <label class="st-label" for="name-input">Name of the Expense:</label>
+        <input id="name-input" type="text" name="name" class="st-input" required>
+    </div>
+
+    <div class="st-field">
+        <label class="st-label" for="date-input">Date</label>
+        <input id="date-input" type="date" name="date" class="st-input" value="{{ today_iso }}" required>
+    </div>
+
+    <div class="st-field">
+        <label class="st-label" for="category-input">Expense Category</label>
+        <select id="category-input" name="category" class="st-select">
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="st-field">
+        <label class="st-label" for="amount-input">Amount</label>
+        <div class="st-number-wrapper">
+            <input id="amount-input" type="number" name="amount" class="st-input" min="0.01" step="0.01" value="0.01" required>
+            <button type="button" id="step-dec" class="st-step-btn" title="Decrease" aria-label="Decrease">&minus;</button>
+            <button type="button" id="step-inc" class="st-step-btn" title="Increase" aria-label="Increase">&#43;</button>
+        </div>
+    </div>
+
+    <button type="submit" class="st-button full-width">Add</button>
+
+    {% if add_msg %}
+    <div class="st-alert st-alert-success">{{ add_msg }}</div>
+    {% endif %}
+    {% if add_error %}
+    <div class="st-alert st-alert-error">{{ add_error }}</div>
+    {% endif %}
+</form>
+
+<hr class="st-divider">
+
+<h2 class="st-header">Filter Expenses</h2>
+
+<form id="filter-form" method="GET" action="/expense-tracker">
+    <div class="st-field">
+        <label class="st-label">Date range</label>
+        <div class="st-date-range-group">
+            <input type="date" name="start_date" class="st-input auto-submit" value="{{ start_date }}" aria-label="Start date">
+            <span class="st-date-range-sep">&ndash;</span>
+            <input type="date" name="end_date" class="st-input auto-submit" value="{{ end_date }}" aria-label="End date">
+        </div>
+    </div>
+
+    <div class="st-field">
+        <label class="st-label" for="filter-cat-select">Filter Category</label>
+        <select id="filter-cat-select" name="category" class="st-select auto-submit">
+            {% for cat in filter_categories %}
+            <option value="{{ cat }}" {% if cat == sel_category %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
+
+{% if expenses_empty %}
+<div class="st-alert st-alert-info">
+    No expenses added yet, add an expense to see the result or choose another date range
+</div>
+{% else %}
+<div class="st-columns-3">
+    <div class="st-metric">
+        <div class="st-metric-label">Total spent</div>
+        <div class="st-metric-value">{{ total_spent_fmt }}</div>
+    </div>
+    <div class="st-metric">
+        <div class="st-metric-label">Transaction</div>
+        <div class="st-metric-value">{{ trans_count_fmt }}</div>
+    </div>
+    <div class="st-metric">
+        <div class="st-metric-label">Average Expense</div>
+        <div class="st-metric-value">{{ avg_expenses_fmt }}</div>
+    </div>
+</div>
+
+<hr class="st-divider">
+
+<div class="st-columns-2">
+    <div>
+        <h3 class="st-subheader">Spending by category</h3>
+        <div class="st-chart-box">
+            {{ cat_chart_html | safe }}
+        </div>
+    </div>
+    <div>
+        <h3 class="st-subheader">Spending over time</h3>
+        <div class="st-chart-box">
+            {{ daily_chart_html | safe }}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

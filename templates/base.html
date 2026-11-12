@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome to our Expense Tracker{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>{% block page_icon %}👋{% endblock %}</text></svg>">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
+    <link rel="stylesheet" href="/static/style.css">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <div class="st-top-bar"></div>
+
+    <button id="sidebar-open-btn" class="sidebar-toggle-btn sidebar-open-btn" title="Open sidebar" aria-label="Open sidebar">
+        &#10095;
+    </button>
+
+    <div class="st-header-actions">
+        <button id="theme-toggle-btn" class="st-theme-toggle" type="button" title="Switch between Dark and Light mode" aria-label="Toggle theme">
+            <span id="theme-icon">☀️</span>
+            <span id="theme-label">Light Mode</span>
+        </button>
+    </div>
+
+    <aside id="sidebar" class="st-sidebar">
+        <div class="st-sidebar-header">
+            <button id="sidebar-close-btn" class="sidebar-toggle-btn" title="Collapse sidebar" aria-label="Collapse sidebar">
+                &#10094;
+            </button>
+        </div>
+
+        <ul class="st-sidebar-nav">
+            <li>
+                <a href="/" class="{% if active_page == 'home' %}active{% endif %}">Home</a>
+            </li>
+            <li>
+                <a href="/expense-tracker" class="{% if active_page == 'expense_tracker' %}active{% endif %}">Expense Tracker</a>
+            </li>
+            <li>
+                <a href="/expenses" class="{% if active_page == 'expenses' %}active{% endif %}">Expenses</a>
+            </li>
+        </ul>
+
+        <div class="st-sidebar-content">
+            {% block sidebar_extra %}{% endblock %}
+        </div>
+    </aside>
+
+    <main class="st-main">
+        <div class="st-block-container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="/static/script.js"></script>
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>
